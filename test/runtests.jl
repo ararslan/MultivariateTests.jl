@@ -2,6 +2,8 @@ using MultivariateTests
 using Compat
 using Compat.Test
 using Compat.DelimitedFiles
+using StatsBase
+using HypothesisTests
 
 @testset "Utility functions" begin
     MT = MultivariateTests
