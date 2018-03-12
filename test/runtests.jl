@@ -5,6 +5,17 @@ using Compat.DelimitedFiles
 using StatsBase
 using HypothesisTests
 
+# Columns are calcium, iron, protein, vitamin A, vitamin C
+nutrient = readdlm(joinpath(@__DIR__, "data", "nutrient.txt"))[:,2:end]
+
+# Columns are information, similarities, arithmetic, picture completion
+wechsler = readdlm(joinpath(@__DIR__, "data", "wechsler.txt"))[:,2:end]
+
+# Columns are type, length, left, right, bottom, top, diag
+swiss = readdlm(joinpath(@__DIR__, "data", "swiss3.txt"))
+genuine = convert(Matrix{Float64}, swiss[view(swiss, :, 1) .== "real", 2:end])
+counterfeit = convert(Matrix{Float64}, swiss[view(swiss, :, 1) .== "fake", 2:end])
+
 @testset "Utility functions" begin
     MT = MultivariateTests
 
@@ -40,8 +51,6 @@ using HypothesisTests
 end
 
 @testset "Generalizations of sample variance" begin
-    # Columns are calcium, iron, protein, vitamin A, vitamin C
-    nutrient = readdlm(joinpath(@__DIR__, "data", "nutrient.txt"))[:,2:end]
     @test @inferred(genvar(nutrient)) ≈ 2.8310418e19 atol=1e-6
     @test @inferred(totalvar(nutrient)) ≈ 2.83266877e6 atol=1e-6
 
@@ -59,8 +68,6 @@ end
 end
 
 @testset "Partial correlation" begin
-    # Columns are information, similarities, arithmetic, picture completion
-    wechsler = readdlm(joinpath(@__DIR__, "data", "wechsler.txt"))[:,2:end]
     @test @inferred(partialcor(wechsler[:,1], wechsler[:,2], wechsler[:,3:4])) ≈ 0.7118787 atol=1e-6
 
     w = PartialCorTest(wechsler[:,1], wechsler[:,2], wechsler[:,3:4])
@@ -73,6 +80,7 @@ end
     end
     @test nobs(w) == 37
     @test dof(w) == 33
+    @test pvalue(w) < 0.00001
 
     X = [ 2 1 0
           4 2 0
@@ -85,22 +93,44 @@ end
     @test confint(x) == (-1.0, 1.0)
     @test nobs(x) == 4
     @test dof(x) == 1
+    @test pvalue(x) ≈ 0.25776212 atol=1e-6
 end
 
-# TODO: The float comparison values need to be more accurate
-#@testset "Two sample Hotelling's T²" begin
-#    swiss = readdlm(joinpath(@__DIR__, "data", "swiss3.txt"))
-#    genuine = convert(Matrix{Float64}, swiss[view(swiss, :, 1) .== "real", 2:end])
-#    counterfeit = convert(Matrix{Float64}, swiss[view(swiss, :, 1) .== "fake", 2:end])
-#
-#    eq = EqualCovHotellingT2(genuine, counterfeit)
-#    @test nobs(eq) == (100, 100)
-#    @test eq.T² ≈ 2412.45
-#    @test eq.F ≈ 391.92
-#    @test dof(eq) == (6, 193)
-#    @test pvalue(eq) ≈ 0.0
-#
-#    un = UnequalCovHotellingT2(genuine, counterfeit)
-#    @test nobs(un) == (100, 100)
-#    @test un.T² ≈ 2412.45
-#end
+@testset "One sample Hotelling's T²" begin
+    t = OneSampleHotellingT2(nutrient, [1000, 15, 60, 800, 75])
+    @test nobs(t) == 737
+    @test dof(t) == (5, 732)
+    @test pvalue(t) ≈ 0.0 atol=eps()
+    @test t.T² ≈ 1758.5413137 atol=1e-6
+    @test t.F ≈ 349.7968048 atol=1e-6
+    let out = sprint(show, t)
+        @test contains(out, "reject h_0") && !contains(out, "fail to")
+    end
+end
+
+@testset "Two sample Hotelling's T²" begin
+    eq = EqualCovHotellingT2(genuine, counterfeit)
+    @test nobs(eq) == (100, 100)
+    @test dof(eq) == (6, 193)
+    @test pvalue(eq) ≈ 0.0 atol=eps()
+    @test eq.T² ≈ 2412.4506855 atol=1e-6
+    @test eq.F ≈ 391.9217023 atol=1e-6
+    @test contains(sprint(show, eq), "reject h_0")
+
+    un = UnequalCovHotellingT2(genuine, counterfeit)
+    @test nobs(un) == (100, 100)
+    @test dof(un) == (6, 193)
+    @test pvalue(un) ≈ 0.0 atol=eps()
+    @test un.T² ≈ 2412.4506855 atol=1e-6
+    @test un.F ≈ 391.9217023 atol=1e-6
+    @test contains(sprint(show, un), "reject h_0")
+end
+
+@testset "Bartlett's test" begin
+    b = BartlettsTest(genuine, counterfeit)
+    @test nobs(b) == (100, 100)
+    @test dof(b) == 21
+    @test pvalue(b) ≈ 0.0 atol=1e-10
+    @test b.L′ ≈ 121.8991235 atol=1e-6
+    @test contains(sprint(show, b), "reject h_0")
+end

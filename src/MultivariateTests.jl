@@ -11,17 +11,13 @@ using HypothesisTests
 using HypothesisTests: HypothesisTest
 
 export
-    # General measures of dispersion
     genvar,
     totalvar,
-    # Partial correlation
     PartialCorTest,
     partialcor,
-    # Equality of mean vectors
     OneSampleHotellingT2,
     EqualCovHotellingT2,
     UnequalCovHotellingT2,
-    # Equality of covariances
     BartlettsTest
 
 ## Common utility functions
@@ -59,5 +55,6 @@ At_Binv_A(A::AbstractArray, B::AbstractArray) = A'*(trychol(B) \ A)
 include("dispersion.jl")
 include("partialcor.jl")
 include("hotelling.jl")
+include("covariance.jl")
 
 end # module
