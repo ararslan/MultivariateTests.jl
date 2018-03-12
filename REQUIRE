@@ -1,0 +1,6 @@
+julia 0.6
+Compat 0.48.0
+StatsBase
+Distributions
+HypothesisTests
+CategoricalArrays
