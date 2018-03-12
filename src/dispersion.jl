@@ -23,5 +23,5 @@ or other one-dimensional iterable, this is equivalent to the sample variance.
 Otherwise if `X` is a matrix, this is equivalent to the sum of the diagonal elements
 of the covariance matrix of `X`.
 """
-totalvar(X::AbstractMatrix) = sum(var(X, dims=1))
+totalvar(X::AbstractMatrix) = sum(var(X, 1))
 totalvar(itr) = var(itr)
