@@ -68,8 +68,8 @@ end
         @test contains(out, "reject h_0") && !contains(out, "fail to")
     end
     let ci = confint(w)
-        @test first(w) ≈ 0.4963917 atol=1e-6
-        @test last(w) ≈ 0.8447292 atol=1e-6
+        @test first(ci) ≈ 0.4963917 atol=1e-6
+        @test last(ci) ≈ 0.8447292 atol=1e-6
     end
     @test nobs(w) == 37
     @test dof(w) == 33
