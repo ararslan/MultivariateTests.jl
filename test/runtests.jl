@@ -28,7 +28,7 @@ counterfeit = convert(Matrix{Float64}, swiss[view(swiss, :, 1) .== "fake", 2:end
     Sx = [ 3.0 -1.5 0.0
           -1.5  1.0 0.5
            0.0  0.5 1.0]
-    Sy = 4.5 * ones(Float64, 3, 3)
+    Sy = fill(4.5, (3, 3))
     out = [3.5 0.5      1.5
            0.5 2.166667 1.833333
            1.5 1.833333 2.166667]
