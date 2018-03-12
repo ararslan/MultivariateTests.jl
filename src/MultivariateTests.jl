@@ -59,6 +59,5 @@ At_Binv_A(A::AbstractArray, B::AbstractArray) = A'*(trychol(B) \ A)
 include("dispersion.jl")
 include("partialcor.jl")
 include("hotelling.jl")
-include("manova.jl")
 
 end # module
