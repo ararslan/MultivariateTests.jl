@@ -33,8 +33,6 @@ using Compat.DelimitedFiles
     Q = [ 1.0 -0.5  0.0
          -0.5  1.0 -0.5
           0.0 -0.5  1.0]
-    @test isa(@inferred(MT.trychol(Q)), Cholesky)
-    @test !isa(@inferred(MT.trychol(P)), Cholesky)
     @test @inferred(MT.At_Binv_A(ones(5), P)) ≈ -0.8008792 atol=1e-6
     @test @inferred(MT.At_Binv_A(ones(3), Q)) ≈ 10.0
 end
