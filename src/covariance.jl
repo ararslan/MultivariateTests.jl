@@ -37,7 +37,8 @@ StatsBase.dof(B::BartlettsTest) = div(B.p * (B.p + 1), 2)
 
 HypothesisTests.testname(::BartlettsTest) =
     "Bartlett's Test for Equality of Covariance Matrices"
-HypothesisTests.pvalue(B::BartlettsTest) = pvalue(Chisq(dof(B)), B.L′)
+HypothesisTests.default_tail(::BartlettsTest) = :right
+HypothesisTests.pvalue(B::BartlettsTest; tail=:right) = pvalue(Chisq(dof(B)), B.L′, tail=tail)
 
 function HypothesisTests.show_params(io::IO, B::BartlettsTest, indent="")
     println(io, indent, "number of observations: ", nobs(B))

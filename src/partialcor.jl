@@ -110,7 +110,9 @@ function StatsBase.confint(test::PartialCorTest, alpha::Float64=0.05)
     return (elo, ehi)
 end
 
-HypothesisTests.pvalue(test::PartialCorTest) = pvalue(TDist(dof(test)), test.t)
+HypothesisTests.default_tail(::PartialCorTest) = :both
+HypothesisTests.pvalue(test::PartialCorTest; tail=:both) =
+    pvalue(TDist(dof(test)), test.t, tail=tail)
 
 function HypothesisTests.show_params(io::IO, test::PartialCorTest, indent="")
     println(io, indent, "number of observations:          ", nobs(test))

@@ -2,7 +2,9 @@
 
 abstract type HotellingT2Test <: HypothesisTest end
 
-HypothesisTests.pvalue(T::HotellingT2Test) = pvalue(FDist(dof(T)...), T.F)
+HypothesisTests.default_tail(::HotellingT2Test) = :right
+HypothesisTests.pvalue(T::HotellingT2Test; tail=:right) =
+    pvalue(FDist(dof(T)...), T.F, tail=tail)
 
 function HypothesisTests.show_params(io::IO, T::HotellingT2Test, indent="")
     println(io, indent, "number of observations: ", nobs(T))
