@@ -1,9 +1,9 @@
 # Partial correlation
 
 """
-    partialcor(X, Y, Z)
+    partialcor(x, y, Z)
 
-Compute the partial correlation of the vectors `X` and `Y` given `Z`, which can be
+Compute the partial correlation of the vectors `x` and `y` given `Z`, which can be
 a vector or matrix.
 """
 function partialcor(x::AbstractVector, y::AbstractVector, Z::AbstractVecOrMat)
@@ -62,10 +62,10 @@ function _partialcor(x::AbstractVector, μx, y::AbstractVector, μy, z::Abstract
 end
 
 """
-    PartialCorTest(X, Y, Z)
+    PartialCorTest(x, y, Z)
 
-Perform a t-test for the hypothesis that the partial correlation of `X` and `Y` given
-`Z` is zero against the alternative that it's nonzero.
+Perform a t-test for the hypothesis that ``\\text{Cor}(x,y|Z=z) = 0``, i.e. the partial
+correlation of vectors `x` and `y` given the matrix `Z` is zero.
 
 Implements `pvalue` and `confint`. See also [`partialcor`](@ref).
 """

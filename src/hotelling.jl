@@ -31,6 +31,12 @@ end
 StatsBase.nobs(T::OneSampleHotellingT2) = T.n
 StatsBase.dof(T::OneSampleHotellingT2) = (T.p, T.n - T.p)
 
+"""
+    OneSampleHotellingT2(X::AbstractMatrix, μ₀=<zero vector>)
+
+Perform a one sample Hotelling's ``T^2`` test of the hypothesis that the vector of
+column means of `X` is equal to `μ₀`.
+"""
 function OneSampleHotellingT2(X::AbstractMatrix{T},
                               μ₀::AbstractVector=fill(middle(zero(T)), size(X, 2))) where T
     n, p = size(X)
@@ -44,7 +50,12 @@ function OneSampleHotellingT2(X::AbstractMatrix{T},
     return OneSampleHotellingT2(T², F, n, p, μ₀, x̄, S)
 end
 
-# paired
+"""
+    OneSampleHotellingT2(X::AbstractMatrix, Y::AbstractMatrix, μ₀=<zero vector>)
+
+Perform a paired Hotelling's ``T^2`` test of the hypothesis that the vector of mean
+column differences between `X` and `Y` is equal to `μ₀`.
+"""
 function OneSampleHotellingT2(X::AbstractMatrix{T}, Y::AbstractMatrix{S},
                               μ₀::AbstractVector=fill(middle(zero(T), zero(S)), size(X, 2))) where {T,S}
     p, nx, ny = checkdims(X, Y)
@@ -72,6 +83,13 @@ struct EqualCovHotellingT2 <: HotellingT2Test
     S::Matrix
 end
 
+"""
+    EqualCovHotellingT2(X::AbstractMatrix, Y::AbstractMatrix)
+
+Perform a two sample Hotelling's ``T^2`` test of the hypothesis that the difference in
+the mean vectors of `X` and `Y` is zero, assuming that `X` and `Y` have equal covariance
+matrices.
+"""
 function EqualCovHotellingT2(X::AbstractMatrix, Y::AbstractMatrix)
     p, nx, ny = checkdims(X, Y)
     Δ = vec(mean(X, 1) .- mean(Y, 1))
@@ -104,6 +122,13 @@ struct UnequalCovHotellingT2 <: HotellingT2Test
     S::Matrix
 end
 
+"""
+    UnequalCovHotellingT2(X::AbstractMatrix, Y::AbstractMatrix)
+
+Perform a two sample Hotelling's ``T^2`` test of the hypothesis that the difference in
+the mean vectors of `X` and `Y` is zero, without assuming that `X` and `Y` have equal
+covariance matrices.
+"""
 function UnequalCovHotellingT2(X::AbstractMatrix, Y::AbstractMatrix)
     p, nx, ny = checkdims(X, Y)
     Δ = vec(mean(X, 1) .- mean(Y, 1))

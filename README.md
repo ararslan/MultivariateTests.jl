@@ -2,6 +2,7 @@
 
 [![Travis](https://travis-ci.org/ararslan/MultivariateTests.jl.svg?branch=master)](https://travis-ci.org/ararslan/MultivariateTests.jl)
 [![Coveralls](https://coveralls.io/repos/github/ararslan/MultivariateTests.jl/badge.svg?branch=master)](https://coveralls.io/github/ararslan/MultivariateTests.jl?branch=master)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://ararslan.github.io/MultivariateTests.jl/latest)
 
 This package provides utilities for multivariate statistical hypothesis testing in Julia.
 It extends the framework provided by
