@@ -114,8 +114,12 @@ end
     p = OneSampleHotellingT2(spouse[:,1:4], spouse[:,5:end])
     @test nobs(p) == 30
     @test dof(p) == (4, 26)
+    @test pvalue(p) ≈ 0.039369144 atol=1e-6
     @test p.T² ≈ 13.127840261 atol=1e-6
     @test p.F ≈ 2.942446955 atol=1e-6
+    let out = sprint(show, p)
+        @test contains(out, "reject h_0") && !contains(out, "fail to")
+    end
 end
 
 @testset "Two sample Hotelling's T²" begin
