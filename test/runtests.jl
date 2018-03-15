@@ -16,6 +16,9 @@ swiss = readdlm(joinpath(@__DIR__, "data", "swiss3.txt"))
 genuine = convert(Matrix{Float64}, swiss[view(swiss, :, 1) .== "real", 2:end])
 counterfeit = convert(Matrix{Float64}, swiss[view(swiss, :, 1) .== "fake", 2:end])
 
+# Columns are survey answers: husbands' to questions 1-4, wives' to questions 1-4
+spouse = readdlm(joinpath(@__DIR__, "data", "spouse.txt"))
+
 @testset "Utility functions" begin
     MT = MultivariateTests
 
@@ -106,6 +109,13 @@ end
     let out = sprint(show, t)
         @test contains(out, "reject h_0") && !contains(out, "fail to")
     end
+
+    # Paired
+    p = OneSampleHotellingT2(spouse[:,1:4], spouse[:,5:end])
+    @test nobs(p) == 30
+    @test dof(p) == (4, 26)
+    @test p.T² ≈ 13.127840261 atol=1e-6
+    @test p.F ≈ 2.942446955 atol=1e-6
 end
 
 @testset "Two sample Hotelling's T²" begin
